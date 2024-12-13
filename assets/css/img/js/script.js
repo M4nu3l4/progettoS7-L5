@@ -1,119 +1,136 @@
-// Costante API
-const API_URL = "https://striveschool-api.herokuapp.com/api/product/";
-const API_HEADERS = {
-  "Content-Type": "application/json",
-  "Authorization": "Bearer YOUR_API_TOKEN" 
-};
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzVjM2ViMmQyMjA3MTAwMTVkZTMxOTMiLCJpYXQiOjE3MzQwOTg2MTAsImV4cCI6MTczNTMwODIxMH0.HJAcbY5E8kTMsC8zCDfdrpelFlnGVhyWudL3yvWXYoo";
 
-//  popolare la home
-const fetchProducts = async () => {
-  try {
-    const response = await fetch(API_URL, { headers: API_HEADERS });
-    if (!response.ok) throw new Error("Errore nel caricamento dei prodotti");
-    const products = await response.json();
+document.addEventListener('DOMContentLoaded', () => {
+    const prodottoNome = document.getElementById('prodottoNome');
+    const prodottoBrand = document.getElementById('prodottoBrand');
+    const prodottoPrezzo = document.getElementById('prodottoPrezzo');
+    const prodottoImmagine = document.getElementById('prodottoImmagine');
+    const prodottoDescrizione = document.getElementById('prodottoDescrizione');
+    const salvaBtn = document.getElementById('salvaBtn');
+    const cancellaBtn = document.getElementById('cancellaBtn');
+    
+    const detailsContainer = document.querySelector('.container');
+    const productId = new URLSearchParams(window.location.search).get('id');
 
-    const row = document.querySelector(".row.d-flex.flex-row.flex-wrap.justify-content-evenly");
-    row.innerHTML = "";
+    //localStorage (index.html)
+    function fetchProductsFromLocalStorage() {
+        const storedProducts = localStorage.getItem('products');
+        return storedProducts ? JSON.parse(storedProducts) : [];
+    }
 
-    products.forEach((product) => {
-      row.innerHTML += `
-        <div class="card" style="width: 18rem;">
-          <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}" />
-          <div class="card-body">
-            <h5 class="card-title">${product.name}</h5>
-            <p class="card-text">${product.description}</p>
-          </div>
-          <div class="card-body">
-            <button type="button" class="btn btn-dark"><a href="details.html?id=${product._id}" class="card-link text-white">Scopri di più</a></button>
-            <button type="button" class="btn btn-dark"><a href="bo.html?id=${product._id}" class="card-link text-white">Modifica</a></button>
-          </div>
-        </div>`;
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
+    // prodotto nel localStorage
+    function saveProductToLocalStorage(product) {
+        const products = fetchProductsFromLocalStorage();
+        products.push(product);
+        localStorage.setItem('products', JSON.stringify(products));
+    }
 
-//  dettagli di un prodotto
-const fetchProductDetails = async (productId) => {
-  try {
-    const response = await fetch(`${API_URL}${productId}`, { headers: API_HEADERS });
-    if (!response.ok) throw new Error("Errore nel caricamento del prodotto");
-    const product = await response.json();
+    //  eliminare un prodotto dal localStorage
+    function deleteProductFromLocalStorage(id) {
+        const products = fetchProductsFromLocalStorage();
+        const updatedProducts = products.filter(product => product._id !== id);
+        localStorage.setItem('products', JSON.stringify(updatedProducts));
+    }
 
-    document.querySelector(".card-title").innerText = product.name;
-    document.querySelector(".card-img-top").src = product.imageUrl;
-    document.querySelector(".card-text").innerText = product.description;
-  } catch (error) {
-    console.error(error);
-  }
-};
+    //localStorage (index.html)
+    function renderProductsFromLocalStorage() {
+        const products = fetchProductsFromLocalStorage();
+        const productContainer = document.getElementById('productContainer');
+        productContainer.innerHTML = ''; 
+        products.forEach(product => {
+            const productCard = `
+                <div class="card" style="width: 18rem;">
+                    <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}">
+                    <div class="card-body">
+                        <h5 class="card-title">${product.name}</h5>
+                        <p class="card-text">${product.description}</p>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-dark"><a href="details.html?id=${product._id}" class="card-link text-white">Scopri di più</a></button>
+                        <button class="btn btn-dark"><a href="bo.html?id=${product._id}" class="card-link text-white">Modifica</a></button>
+                    </div>
+                </div>
+            `;
+            productContainer.innerHTML += productCard;
+        });
+    }
 
-//  salvo un nuovo prodotto o modifico
-const saveProduct = async (productId) => {
-  try {
-    const product = {
-      name: document.querySelector("#protottoNome").value,
-      brand: document.querySelector("[name='Brand']").value,
-      price: parseFloat(document.querySelector("[name='Prezzo']").value),
-      imageUrl: document.querySelector("[name='URL Immagine']").value,
-      description: document.querySelector("[name='Descrizione']").value,
-    };
+    if (window.location.pathname === "/index.html") {
+        renderProductsFromLocalStorage();  // Carica i prodotti dal localStorage
+    }
 
-    const method = productId ? "PUT" : "POST";
-    const url = productId ? `${API_URL}${productId}` : API_URL;
+    // nuovo prodotto (bo.html)
+    salvaBtn.addEventListener('click', (e) => {
+        e.preventDefault();
 
-    const response = await fetch(url, {
-      method: method,
-      headers: API_HEADERS,
-      body: JSON.stringify(product),
-    });
+        const newProduct = {
+            _id: Date.now(),  
+            name: prodottoNome.value,
+            brand: prodottoBrand.value,
+            price: parseFloat(prodottoPrezzo.value),
+            imageUrl: prodottoImmagine.value,
+            description: prodottoDescrizione.value,
+        };
 
-    if (!response.ok) throw new Error("Errore nel salvataggio del prodotto");
-    alert("Prodotto salvato con successo!");
-    window.location.href = "index.html";
-  } catch (error) {
-    console.error(error);
-  }
-};
+        // Salva il prodotto nel localStorage
+        saveProductToLocalStorage(newProduct);
 
-// cancello un prodotto
-const deleteProduct = async (productId) => {
-  try {
-    const response = await fetch(`${API_URL}${productId}`, {
-      method: "DELETE",
-      headers: API_HEADERS,
+        alert('Prodotto salvato con successo!');
+        window.location.href = 'index.html'; 
     });
 
-    if (!response.ok) throw new Error("Errore nella cancellazione del prodotto");
-    alert("Prodotto cancellato con successo!");
-    window.location.href = "index.html";
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-
-if (window.location.pathname.endsWith("index.html")) {
-  fetchProducts();
-} else if (window.location.pathname.endsWith("details.html")) {
-  const productId = new URLSearchParams(window.location.search).get("id");
-  if (productId) fetchProductDetails(productId);
-} else if (window.location.pathname.endsWith("bo.html")) {
-  const productId = new URLSearchParams(window.location.search).get("id");
-  if (productId) {
-  
-    fetchProductDetails(productId).then((product) => {
-      document.querySelector("#protottoNome").value = product.name;
-      document.querySelector("[name='Brand']").value = product.brand;
-      document.querySelector("[name='Prezzo']").value = product.price;
-      document.querySelector("[name='URL Immagine']").value = product.imageUrl;
-      document.querySelector("[name='Descrizione']").value = product.description;
+    // Reset del form (bo.html)
+    cancellaBtn.addEventListener('click', () => {
+        prodottoNome.value = '';
+        prodottoBrand.value = '';
+        prodottoPrezzo.value = '';
+        prodottoImmagine.value = '';
+        prodottoDescrizione.value = '';
     });
-  }
 
-  document.querySelector(".btn-outline-success").addEventListener("click", () => saveProduct(productId));
-  document.querySelector(".btn-outline-danger").addEventListener("click", () => {
-    if (confirm("Sei sicuro di voler cancellare il prodotto?")) deleteProduct(productId);
-  });
-}
+    //  (details.html)
+    if (productId) {
+        fetchProductDetails(productId);
+    }
+
+    
+    function fetchProductDetails(id) {
+        const products = fetchProductsFromLocalStorage();
+        const product = products.find(p => p._id == id);
+        if (product) {
+            renderProductDetails(product);
+        } else {
+            alert("Prodotto non trovato");
+        }
+    }
+
+    //  (details.html)
+    function renderProductDetails(product) {
+        detailsContainer.innerHTML = `
+            <div class="card">
+                <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}">
+                <div class="card-body">
+                    <h5 class="card-title">${product.name}</h5>
+                    <p class="card-text">${product.description}</p>
+                    <p class="card-text">Brand: ${product.brand}</p>
+                    <p class="card-text">Prezzo: €${product.price}</p>
+                    <button class="btn btn-dark" onclick="window.location.href='bo.html?id=${product._id}'">Modifica</button>
+                    <button class="btn btn-danger" id="deleteBtn">Elimina</button>
+                </div>
+            </div>
+        `;
+    
+        document.getElementById('deleteBtn').addEventListener('click', () => deleteProduct(product._id));
+    }
+    
+
+    // (details.html)
+    function deleteProduct(id) {
+        if (confirm("Sei sicuro di voler eliminare questo prodotto?")) {
+            deleteProductFromLocalStorage(id);
+            alert('Prodotto eliminato con successo');
+            window.location.href = 'index.html';  
+        }
+    }
+});
+
