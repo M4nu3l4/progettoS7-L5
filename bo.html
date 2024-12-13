@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Back_Office</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <header>
+        <div>
+            <nav class="navbar bg-dark">
+                <form class="container-fluid justify-content-between">
+                    <img id="logo" src="assets/img/logo_amazon.png" alt="logo">
+                    <button class="btn btn-outline-warning me-2 text-white" type="button"><a class="text-white"
+                            href="index.html">Torna Alla Home</a></button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div>
+            <h1 class="text-center mt-5 mb-5 fw-bold">Aggiungi Prodotto</h1>
+            <hr>
+        </div>
+        <div class="container">
+            <div class=" row col-4 d-flex flex-column justify-content-center align-items-center p-3">
+                <label for="Nome" class="form">Nome</label>
+                <input id="protottoNome" class="form-control form-control-lg text-center mt-3" name="Nome" type="text"
+                    placeholder="nome" aria-label=".form-control-lg example">
+            </div>
+        </div>
+        <div class="container">
+            <div class=" row col-4 d-flex flex-column justify-content-center align-items-center p-3">
+                <label for="Brand" class="form">Brand</label>
+                <input id="protottoNome" class="form-control form-control-lg text-center mt-3 " name="Brand" type="text"
+                    placeholder="Brand" aria-label=".form-control-lg example">
+            </div>
+        </div>
+        <div class="container">
+            <div class=" row col-4 d-flex flex-column justify-content-center align-items-center p-3">
+                <label for="Prezzo" class="form">Prezzo</label>
+                <input id="protottoNome" class="form-control form-control-lg text-center mt-3 " name="Prezzo"
+                    type="text" placeholder="€" aria-label=".form-control-lg example">
+            </div>
+        </div>
+        <div class="container">
+            <div class=" row col-4 d-flex flex-column justify-content-center align-items-center p-3">
+                <label for="URL Immagine" class="form">URL Immagine</label>
+                <input id="protottoNome" class="form-control form-control-lg text-center mt-3 " name="URL Immagine"
+                    type="text" placeholder="URL Immagine" aria-label=".form-control-lg example">
+            </div>
+            <div class="mb-3">
+                <label for="Descrizione" class="form-label mt-3 p-3">Descrizione</label>
+                <textarea class="form-control rounded-3" name="Descrizione" id="exampleFormControlTextarea1"
+                    rows="3"></textarea>
+            </div>
+        </div>
+        <div class="row dflex-row justify-content-center m-5">
+            <button type="button" class="btn btn-outline-success btn-lg col-2">Salva</button>
+            <button type="button" class="btn btn-outline-danger btn-lg col-2">Cancella</button>
+        </div>
+    </main>
+    <section class="footer">
+        <footer class="text-center text-white bg-dark">
+            <div class="container p-4 pb-0">
+                <img id="logo" src="assets/img/logo_amazon.png" alt="">
+                <section class="">
+                    <p class="d-flex justify-content-center align-items-center">
+                        <span class="me-3">Registrati</span>
+                        <button data-mdb-ripple-init type="button" class="btn btn-outline-warning btn-rounded">
+                            Accedi
+                        </button>
+                    </p>
+                </section>
+            </div>
+            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+                © 1996-2024 Amazon.com, Inc. o società affiliate
+                <a class="text-white"
+                    href="https://www.amazon.it/?&tag=goitab-21&ref=pd_sl_781ozcfkw6_e&adgrpid=156928205950&hvpone=&hvptwo=&hvadid=710580145406&hvpos=&hvnetw=g&hvrand=9831019023870711157&hvqmt=e&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9213647&hvtargid=kwd-10573980&hydadcr=10841_2239539">Amazon.it</a>
+            </div>
+        </footer>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="assets/js/script.js"></script>
+</body>
+
+</html>
